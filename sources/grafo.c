@@ -47,6 +47,7 @@ void inserirVertice(grafo* tGrafo,int no){//insere um vértice no grafo
     vertice* tVertice = (vertice*)calloc(1,sizeof(vertice));//aloca o espaço de memória
     tVertice->value = no;//da o valor daquele nó, no caso uma identificação
     tVertice->dist = -1;//define um valor de distância inicial padrão
+    tVertice->peca = '\0';
     tVertice->status.buscaPorLarguraStatus = -1;//define como -1 valor dos nós não visitados
     tGrafo->numVertices ++;//soma 1 ao total de vertices do grafo
     tVertice->numArestas = 0;//inicializa como 0 o numero de arestas desse vertice
@@ -129,6 +130,13 @@ void liberarGrafo(grafo* tGrafo){//libera a memória alocada
     free(tGrafo);//libera o próprio grafo
 }
 
+void resetBusca(grafo* tGrafo){
+    for(int i=0;i<tGrafo->numVertices;i++){
+        vertice* tVertice = (vertice*)lerElemento(tGrafo->vertices,i);//retorna o elemento i da lista
+        tVertice->status.buscaPorLarguraStatus = -1;
+    }
+}
+
 void buscaPorLargura(grafo* tGrafo,int vInicial){
     Lista* fila = criarLista();//fila utilizada para inserir os vertices
     vertice* tVertice = buscarElemento(tGrafo->vertices,&vInicial,buscaVerticeFunc);//busca o vertice inicial
@@ -151,5 +159,6 @@ void buscaPorLargura(grafo* tGrafo,int vInicial){
         }
         removerElementoInicio(fila,0);
     }
+    resetBusca(tGrafo);
     limparLista(fila,0);
 }
