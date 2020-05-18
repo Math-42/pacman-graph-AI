@@ -16,6 +16,7 @@ typedef struct{//estrutura para cada vertice do grafo
     int value;//valor ou id que ele assume
     int numArestas;//numArestas total
     int dist;//distancia desse vertice a algum outro vertice
+    char peca;
     stats status;//struct onde ficará salvo as variáveis necessárias para operar com o grafo
     void* dado;//dado que esse vertice salva
     Lista* arestas;//Lista das arestas do vertice
