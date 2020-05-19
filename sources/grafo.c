@@ -10,16 +10,16 @@ grafo* criarGrafo(){//inicializa o grafo
 }
 
 grafo* criarMatrizConexa(int i,int j){
-    grafo* novoGrafo = criarGrafo();
+    grafo* novoGrafo = criarGrafo();// cria um novo grafo
     int id = 0;
     for(int m=0;m<i;m++){
         for(int n=0;n<j;n++){
-            inserirVertice(novoGrafo,id);
+            inserirVertice(novoGrafo,id);//insere os vertices
             if(id-j>=0){
-                inserirAresta(novoGrafo,id,id-j,1);
+                inserirAresta(novoGrafo,id,id-j,1);//conecta com o vertice superior
             }
             if(n-1 >=0){
-                inserirAresta(novoGrafo,id,id-1,1);
+                inserirAresta(novoGrafo,id,id-1,1);//conecta com o vertice anterior
             }
             id++;
         }
@@ -131,34 +131,34 @@ void liberarGrafo(grafo* tGrafo){//libera a memória alocada
 }
 
 void resetBusca(grafo* tGrafo){
-    for(int i=0;i<tGrafo->numVertices;i++){
+    for(int i=0;i<tGrafo->numVertices;i++){//percorre a lista de vertices
         vertice* tVertice = (vertice*)lerElemento(tGrafo->vertices,i);//retorna o elemento i da lista
-        tVertice->status.buscaPorLarguraStatus = -1;
+        tVertice->status.buscaPorLarguraStatus = -1;//define o elemento como não visitado
     }
 }
 
 void buscaPorLargura(grafo* tGrafo,int vInicial){
     Lista* fila = criarLista();//fila utilizada para inserir os vertices
     vertice* tVertice = buscarElemento(tGrafo->vertices,&vInicial,buscaVerticeFunc);//busca o vertice inicial
-    tVertice->status.buscaPorLarguraStatus = 0;
-    tVertice->dist = 0;
-    criarElementoFinal(fila,tVertice);
-    while (!estaVazia(fila)){
-        tVertice = (vertice*)lerElemento(fila,0);
-        if(tVertice->status.buscaPorLarguraStatus == 0){
-            tVertice->status.buscaPorLarguraStatus = 1;
-            for(int i=0;i<tVertice->numArestas;i++){
-                aresta* tAresta = (aresta*)lerElemento(tVertice->arestas,i);
-                vertice* tVertice2 = (vertice*)tAresta->destino;
-                if(tVertice2->status.buscaPorLarguraStatus == -1){
-                    tVertice2->status.buscaPorLarguraStatus = 0;
-                    tVertice2->dist = tVertice->dist + 1;
-                    criarElementoFinal(fila,tVertice2);
+    tVertice->status.buscaPorLarguraStatus = 0;//define o primeiro elemento como visitado
+    tVertice->dist = 0;//distancia dele com ele mesmo
+    criarElementoFinal(fila,tVertice);//o adiciona no final da fila
+    while (!estaVazia(fila)){//enquanto tiver vertices para visitar
+        tVertice = (vertice*)lerElemento(fila,0);//pega o primeiro vertice da fila
+        if(tVertice->status.buscaPorLarguraStatus == 0){//testa se ele ja foi visitado
+            tVertice->status.buscaPorLarguraStatus = 1;//define como ja processado
+            for(int i=0;i<tVertice->numArestas;i++){//percorre a lista de arestas
+                aresta* tAresta = (aresta*)lerElemento(tVertice->arestas,i);//pega a iesima aresta
+                vertice* tVertice2 = (vertice*)tAresta->destino;//retorna o vertice que esta conectado
+                if(tVertice2->status.buscaPorLarguraStatus == -1){//testa se o vertice ainda nao foi visitado
+                    tVertice2->status.buscaPorLarguraStatus = 0;//define como visitado
+                    tVertice2->dist = tVertice->dist + 1;//define a distancia como a distancia do atual +1;
+                    criarElementoFinal(fila,tVertice2);// adiciona o vertice ao final da fila
                 }   
             }
         }
-        removerElementoInicio(fila,0);
+        removerElementoInicio(fila,0);//remove o vertice que foi processado
     }
-    resetBusca(tGrafo);
-    limparLista(fila,0);
+    resetBusca(tGrafo);//limpa o campo da busca por largura de todos os vertices
+    limparLista(fila,0);//limpa e libera a fila alocada
 }
